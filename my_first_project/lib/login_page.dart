@@ -3,8 +3,7 @@ import 'package:my_first_project/dashbord.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key });
-
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -19,9 +18,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-
     super.initState();
-
   }
 
   @override
@@ -72,7 +69,6 @@ class _LoginPageState extends State<LoginPage> {
                 ),
 
                 hintText: "Enter your password",
-
               ),
               onChanged: (value) {
                 print(value);
@@ -81,7 +77,6 @@ class _LoginPageState extends State<LoginPage> {
                 password = value;
                 setState(() {});
               },
-
             ),
           ),
 
@@ -104,26 +99,92 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void sendToServer(String email, String password) async{
-    email=email.trim();
+  void sendToServer(String email, String password) async {
+    email = email.trim();
 
-    if(email.isEmpty || password.isEmpty){
+    if (email.isEmpty || password.isEmpty) {
       print("Email or Password is empty");
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(backgroundColor: Colors.amber,
+            content: Container(child: Text("Email or Password is empty")),
+            actions: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Text("OK"),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Text("Cancel"),
+              ),
+            ],
+          );
+        },
+      );
+
       return;
     }
 
-    if(!email.contains("@")){
+    if (!email.contains("@")) {
       print("Email is invalid");
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(backgroundColor: Colors.amber,
+            content: Container(child: Text("Email is invalid")),
+            actions: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Text("OK"),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Text("Cancel"),
+              ),
+            ],
+          );
+        },
+      );
       return;
     }
 
-    if(password.length<8){
+    if (password.length < 8) {
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return AlertDialog(backgroundColor: Colors.amber,
+            content: Container(child: Text("Password must be at least 8 characters long")),
+            actions: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Text("OK"),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Text("Cancel"),
+              ),
+            ],
+          );
+        },
+      );
       return;
     }
 
-
-
-    SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setString("email", email);
     sharedPreferences.setBool("isLoggedIn", true);
 
@@ -132,7 +193,5 @@ class _LoginPageState extends State<LoginPage> {
       context,
       MaterialPageRoute(builder: (context) => Dashboard(email)),
     );
-
-
   }
 }
