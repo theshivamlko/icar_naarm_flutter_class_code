@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:my_first_project/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'fruits_and_vegetables.dart';
+
 class Dashboard extends StatefulWidget {
   String email = "";
 
@@ -43,30 +45,36 @@ class _DashboardState extends State<Dashboard> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               widget.email,
-              style: TextStyle(fontSize: 24, color: Colors.black),
+              style: TextStyle(fontSize: 18, color: Colors.black54),
             ),
+
+            Padding(padding: EdgeInsets.all(12)),
 
             Expanded(
               child: ListView.builder(
                 itemBuilder: (context, index) {
-
                   return GestureDetector(
                     onTap: () {
                       print("Clicked index $index");
 
-                      if(index==0){
-                       // Navigator.pushReplacement(context, FruitsAndVegetableData())
-                      }else if(index==1) {
+                      if (index == 0) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FruitsAndVegetablesScreen(),
+                          ),
+                        );
+                      } else if (index == 1) {
                         // Navigator.pushReplacement(context, AreaAndProductionData())
-                      }else if(index==2) {
+                      } else if (index == 2) {
                         // Navigator.pushReplacement(context, ProductionOfDifferentCropsData())
-                      }else if(index==3) {
+                      } else if (index == 3) {
                         // Navigator.pushReplacement(context, AreaUnderDifferentCropsData())
                       }
-
                     },
                     child: Card(
                       color: Colors.white,
@@ -74,8 +82,11 @@ class _DashboardState extends State<Dashboard> {
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Row(
                           children: [
-                            Image.network("https://img.freepik.com/premium-vector/landscaping-logo-white-background_1277164-20458.jpg?semt=ais_hybrid&w=740&q=80",
-                            height: 100,width: 100,),
+                            Image.network(
+                              "https://img.freepik.com/premium-vector/landscaping-logo-white-background_1277164-20458.jpg?semt=ais_hybrid&w=740&q=80",
+                              height: 100,
+                              width: 100,
+                            ),
                             Flexible(
                               child: Text(
                                 titles[index],
@@ -84,17 +95,16 @@ class _DashboardState extends State<Dashboard> {
                                   color: Colors.black,
                                 ),
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
                     ),
                   );
-
-              },
-              itemCount: titles.length,
+                },
+                itemCount: titles.length,
               ),
-            )
+            ),
           ],
         ),
       ),

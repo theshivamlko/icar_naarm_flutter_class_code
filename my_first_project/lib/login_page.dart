@@ -72,6 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
 
                 hintText: "Enter your password",
+
               ),
               onChanged: (value) {
                 print(value);
@@ -80,6 +81,7 @@ class _LoginPageState extends State<LoginPage> {
                 password = value;
                 setState(() {});
               },
+
             ),
           ),
 
@@ -103,11 +105,27 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void sendToServer(String email, String password) async{
+    email=email.trim();
+
+    if(email.isEmpty || password.isEmpty){
+      print("Email or Password is empty");
+      return;
+    }
+
+    if(!email.contains("@")){
+      print("Email is invalid");
+      return;
+    }
+
+    if(password.length<8){
+      return;
+    }
+
+
 
     SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
     sharedPreferences.setString("email", email);
     sharedPreferences.setBool("isLoggedIn", true);
-
 
     // To open a page
     Navigator.pushReplacement(
