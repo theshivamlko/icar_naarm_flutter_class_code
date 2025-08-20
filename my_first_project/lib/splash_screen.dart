@@ -22,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.purple,
+      backgroundColor: Colors.blue,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -37,21 +37,20 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  void checkIfLoggedIn() async {
-    await Future.delayed(Duration(seconds: 2));
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  Future<void> checkIfLoggedIn() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    String email = ( prefs.getString("email")) ?? "";
 
-    String email = ( sharedPreferences.getString("email")) ?? "";
-    bool isLoggedIn = ( sharedPreferences.getBool("isLoggedIn")) ?? false;
-
+    // add logic with explanation
     if (isLoggedIn) {
-      // To open a page
+      // If the user is logged in, navigate to the dashboard
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => Dashboard(email)),
       );
     } else {
-      // To open a page
+      // If the user is not logged in, navigate to the login page
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => LoginPage()),

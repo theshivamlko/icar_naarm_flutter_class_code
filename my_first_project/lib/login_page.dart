@@ -24,77 +24,241 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Login Page"), backgroundColor: Colors.purple),
-      body: Column(
-        children: [
-          Text("Login Form", style: TextStyle(fontSize: 30)),
-          Text(email, style: TextStyle(fontSize: 18)),
-
-          // Email Input Field
-          Padding(
-            padding: EdgeInsets.all(10),
-            child: TextField(
-              controller: emailController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Colors.purple, width: 2),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF8E44AD), // Purple
+              Color(0xFFE74C3C), // Red
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Top section with greeting
+              Expanded(
+                flex: 2,
+                child: Container(
+                  padding: EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Icon(Icons.menu, color: Colors.white, size: 24),
+                          Icon(Icons.more_vert, color: Colors.white, size: 24),
+                        ],
+                      ),
+                      Spacer(),
+                      Text(
+                        "Hello",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 32,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                      Text(
+                        "Sign in!",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 32,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-
-                hintText: "Enter your email",
               ),
-              onChanged: (value) {
-                print(value);
-              },
-              onSubmitted: (value) {
-                email = value;
-                setState(() {});
-              },
-            ),
-          ),
 
-          // Blank Space
-          Padding(padding: EdgeInsets.all(10)),
+              // Bottom section with form
+              Expanded(
+                flex: 3,
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(30),
+                    child: Column(
+                      children: [
+                        SizedBox(height: 20),
 
-          // Password Input Field
-          Padding(
-            padding: EdgeInsets.all(10),
-            child: TextField(
-              controller: passwordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Colors.purple, width: 2),
+                        // Email Field
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Email",
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            TextField(
+                              controller: emailController,
+                              decoration: InputDecoration(
+                                hintText: "example@gmail.com",
+                                hintStyle: TextStyle(color: Colors.grey[400]),
+                                border: InputBorder.none,
+                                suffixIcon: Icon(Icons.check, color: Colors.green, size: 20),
+                              ),
+                              style: TextStyle(fontSize: 16),
+                              onChanged: (value) {
+                                print(value);
+                              },
+                              onSubmitted: (value) {
+                                email = value;
+                                setState(() {});
+                              },
+                            ),
+                            Divider(color: Colors.grey[300]),
+                          ],
+                        ),
+
+                        SizedBox(height: 20),
+
+                        // Password Field
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Password",
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            TextField(
+                              controller: passwordController,
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                hintText: "••••••••",
+                                hintStyle: TextStyle(color: Colors.grey[400]),
+                                border: InputBorder.none,
+                              ),
+                              style: TextStyle(fontSize: 16),
+                              onChanged: (value) {
+                                print(value);
+                              },
+                              onSubmitted: (value) {
+                                password = value;
+                                setState(() {});
+                              },
+                            ),
+                            Divider(color: Colors.grey[300]),
+                          ],
+                        ),
+
+                        SizedBox(height: 10),
+
+                        // Forgot Password
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            onPressed: () {
+                              // Handle forgot password
+                            },
+                            child: Text(
+                              "Forgot password?",
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(height: 30),
+
+                        // Sign In Button
+                        Container(
+                          width: double.infinity,
+                          height: 55,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Color(0xFF8E44AD),
+                                Color(0xFFE74C3C),
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(27.5),
+                          ),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              print("Login was clicked");
+                              print("Email: ${emailController.text}");
+                              print("Password: ${passwordController.text}");
+                              sendToServer(emailController.text, passwordController.text);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(27.5),
+                              ),
+                            ),
+                            child: Text(
+                              "SIGN IN",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        Spacer(),
+
+                        // Sign Up Link
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Don't have account?",
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 14,
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                // Handle sign up
+                              },
+                              child: Text(
+                                "Sign up",
+                                style: TextStyle(
+                                  color: Color(0xFF8E44AD),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-
-                hintText: "Enter your password",
               ),
-              onChanged: (value) {
-                print(value);
-              },
-              onSubmitted: (value) {
-                password = value;
-                setState(() {});
-              },
-            ),
+            ],
           ),
-
-          Container(
-            color: Colors.red,
-            width: 300,
-            height: 60,
-            child: ElevatedButton(
-              onPressed: () {
-                print("Login was clicked");
-                print("Email: ${emailController.text}");
-                print("Password: ${passwordController.text}");
-                sendToServer(emailController.text, passwordController.text);
-              },
-              child: Text("Login"),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -107,26 +271,36 @@ class _LoginPageState extends State<LoginPage> {
       showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(backgroundColor: Colors.amber,
-            content: Container(child: Text("Email or Password is empty")),
-            actions: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Text("OK"),
+          return AlertDialog(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            title: Text(
+              "Error",
+              style: TextStyle(
+                color: Color(0xFF8E44AD),
+                fontWeight: FontWeight.bold,
               ),
-              GestureDetector(
-                onTap: () {
+            ),
+            content: Text(
+              "Email or Password is empty",
+              style: TextStyle(color: Colors.grey[700]),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text("Cancel"),
+                child: Text(
+                  "OK",
+                  style: TextStyle(color: Color(0xFF8E44AD)),
+                ),
               ),
             ],
           );
         },
       );
-
       return;
     }
 
@@ -135,20 +309,31 @@ class _LoginPageState extends State<LoginPage> {
       showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(backgroundColor: Colors.amber,
-            content: Container(child: Text("Email is invalid")),
-            actions: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Text("OK"),
+          return AlertDialog(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            title: Text(
+              "Invalid Email",
+              style: TextStyle(
+                color: Color(0xFF8E44AD),
+                fontWeight: FontWeight.bold,
               ),
-              GestureDetector(
-                onTap: () {
+            ),
+            content: Text(
+              "Please enter a valid email address",
+              style: TextStyle(color: Colors.grey[700]),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text("Cancel"),
+                child: Text(
+                  "OK",
+                  style: TextStyle(color: Color(0xFF8E44AD)),
+                ),
               ),
             ],
           );
@@ -162,20 +347,31 @@ class _LoginPageState extends State<LoginPage> {
         barrierDismissible: false,
         context: context,
         builder: (context) {
-          return AlertDialog(backgroundColor: Colors.amber,
-            content: Container(child: Text("Password must be at least 8 characters long")),
-            actions: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Text("OK"),
+          return AlertDialog(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            title: Text(
+              "Weak Password",
+              style: TextStyle(
+                color: Color(0xFF8E44AD),
+                fontWeight: FontWeight.bold,
               ),
-              GestureDetector(
-                onTap: () {
+            ),
+            content: Text(
+              "Password must be at least 8 characters long",
+              style: TextStyle(color: Colors.grey[700]),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text("Cancel"),
+                child: Text(
+                  "OK",
+                  style: TextStyle(color: Color(0xFF8E44AD)),
+                ),
               ),
             ],
           );
