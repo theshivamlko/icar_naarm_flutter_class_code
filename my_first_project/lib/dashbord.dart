@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:my_first_project/splash_screen.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'fruits_and_vegetables.dart';
 
@@ -80,20 +82,49 @@ class _DashboardState extends State<Dashboard> {
                       color: Colors.white,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Row(
+                        child: Column(
                           children: [
-                            Image.network(
-                              "https://img.freepik.com/premium-vector/landscaping-logo-white-background_1277164-20458.jpg?semt=ais_hybrid&w=740&q=80",
-                              height: 100,
-                              width: 100,
-                            ),
-                            Flexible(
-                              child: Text(
-                                titles[index],
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black,
+                            Row(
+                              children: [
+                                Image.network(
+                                  "https://img.freepik.com/premium-vector/landscaping-logo-white-background_1277164-20458.jpg?semt=ais_hybrid&w=740&q=80",
+                                  height: 100,
+                                  width: 100,
                                 ),
+                                Flexible(
+                                  child: Text(
+                                    titles[index],
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+
+                                      launchUrl(Uri.parse("https://linkedin.com/"));
+
+                                    },
+                                    icon: Icon(Icons.wifi),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      SharePlus.instance.share(
+                                          ShareParams(text: titles[index])
+                                      );
+                                    },
+                                    icon: Icon(Icons.share),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
