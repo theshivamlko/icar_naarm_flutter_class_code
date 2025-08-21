@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
+import 'package:my_first_project/MyDatabase.dart';
 
 class FruitsAndVegetablesScreen extends StatefulWidget {
   const FruitsAndVegetablesScreen({super.key});
@@ -16,40 +19,30 @@ class _FruitsAndVegetablesScreenState extends State<FruitsAndVegetablesScreen>
   bool isLoading = false;
   String? errorMessage;
 
-  late AnimationController _animationController;
   late AnimationController _loadingController;
-  late Animation<double> _fadeAnimation;
-  late Animation<double> _scaleAnimation;
+
+  MyDatabase myDatabase = MyDatabase();
 
   @override
   void initState() {
     super.initState();
+    myDatabase.initialize();
     _setupAnimations();
     fetchVegetablesData();
   }
 
   void _setupAnimations() {
-    _animationController = AnimationController(
-      duration: Duration(milliseconds: 800),
-      vsync: this,
-    );
+
     _loadingController = AnimationController(
       duration: Duration(milliseconds: 1500),
       vsync: this,
     )..repeat();
 
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
-    );
 
-    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.elasticOut),
-    );
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
     _loadingController.dispose();
     super.dispose();
   }
@@ -187,10 +180,7 @@ class _FruitsAndVegetablesScreenState extends State<FruitsAndVegetablesScreen>
           SizedBox(height: 10),
           Text(
             "Please wait while we fetch the latest information",
-            style: TextStyle(
-              fontSize: 14,
-              color: Color(0xFF718096),
-            ),
+            style: TextStyle(fontSize: 14, color: Color(0xFF718096)),
             textAlign: TextAlign.center,
           ),
         ],
@@ -229,10 +219,7 @@ class _FruitsAndVegetablesScreenState extends State<FruitsAndVegetablesScreen>
             SizedBox(height: 10),
             Text(
               errorMessage ?? "Failed to load data",
-              style: TextStyle(
-                fontSize: 16,
-                color: Color(0xFF718096),
-              ),
+              style: TextStyle(fontSize: 16, color: Color(0xFF718096)),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 30),
@@ -272,27 +259,23 @@ class _FruitsAndVegetablesScreenState extends State<FruitsAndVegetablesScreen>
   }
 
   Widget _buildContent() {
+    print(responseMap.isEmpty);
+
     if (responseMap.isEmpty) {
       return _buildErrorState();
     }
 
-    return FadeTransition(
-      opacity: _fadeAnimation,
-      child: ScaleTransition(
-        scale: _scaleAnimation,
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildInfoCard(),
-              SizedBox(height: 20),
-              _buildSectorsCard(),
-              SizedBox(height: 20),
-              _buildDataTable(),
-            ],
-          ),
-        ),
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildInfoCard(),
+          SizedBox(height: 20),
+          _buildSectorsCard(),
+          SizedBox(height: 20),
+          _buildDataTable(),
+        ],
       ),
     );
   }
@@ -401,11 +384,7 @@ class _FruitsAndVegetablesScreenState extends State<FruitsAndVegetablesScreen>
                   color: Color(0xFF6C5CE7).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(
-                  Icons.category,
-                  color: Color(0xFF6C5CE7),
-                  size: 24,
-                ),
+                child: Icon(Icons.category, color: Color(0xFF6C5CE7), size: 24),
               ),
               SizedBox(width: 12),
               Text(
@@ -518,26 +497,19 @@ class _FruitsAndVegetablesScreenState extends State<FruitsAndVegetablesScreen>
               columnSpacing: 12,
               horizontalMargin: 20,
               minWidth: 800,
-              headingRowColor: MaterialStateProperty.all(
-                Color(0xFFF7FAFC),
-              ),
+              headingRowColor: MaterialStateProperty.all(Color(0xFFF7FAFC)),
               headingTextStyle: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF2D3748),
                 fontSize: 14,
               ),
-              dataTextStyle: TextStyle(
-                color: Color(0xFF4A5568),
-                fontSize: 13,
-              ),
+              dataTextStyle: TextStyle(color: Color(0xFF4A5568), fontSize: 13),
               columns: [
                 DataColumn2(
                   label: Text(fields[0]["name"] ?? "Category"),
                   size: ColumnSize.L,
                 ),
-                DataColumn(
-                  label: Text(fields[1]["name"] ?? "Country"),
-                ),
+                DataColumn(label: Text(fields[1]["name"] ?? "Country")),
                 DataColumn(
                   label: Text(fields[3]["name"] ?? "2009-10"),
                   numeric: true,
@@ -551,51 +523,40 @@ class _FruitsAndVegetablesScreenState extends State<FruitsAndVegetablesScreen>
                   numeric: true,
                 ),
               ],
-              rows: List<DataRow>.generate(
-                records.length,
-                    (index) {
-                  final record = records[index];
-                  return DataRow(
-                    color: MaterialStateProperty.resolveWith<Color?>(
-                          (Set<MaterialState> states) {
-                        if (index.isEven) {
-                          return Color(0xFFF7FAFC).withOpacity(0.3);
-                        }
-                        return null;
-                      },
+              rows: List<DataRow>.generate(records.length, (index) {
+                final record = records[index];
+                return DataRow(
+                  color: MaterialStateProperty.resolveWith<Color?>((
+                    Set<MaterialState> states,
+                  ) {
+                    if (index.isEven) {
+                      return Color(0xFFF7FAFC).withOpacity(0.3);
+                    }
+                    return null;
+                  }),
+                  cells: [
+                    DataCell(
+                      Container(
+                        padding: EdgeInsets.symmetric(vertical: 8),
+                        child: Text(
+                          record["category"]?.toString() ?? "-",
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                      ),
                     ),
-                    cells: [
-                      DataCell(
-                        Container(
-                          padding: EdgeInsets.symmetric(vertical: 8),
-                          child: Text(
-                            record["category"]?.toString() ?? "-",
-                            style: TextStyle(fontWeight: FontWeight.w500),
-                          ),
-                        ),
-                      ),
-                      DataCell(
-                        Text(record["country"]?.toString() ?? "-"),
-                      ),
-                      DataCell(
-                        Text(
-                          _formatNumber(record["area_in_hectare__2009_10"]),
-                        ),
-                      ),
-                      DataCell(
-                        Text(
-                          _formatNumber(record["area_in_hectare__2010_11"]),
-                        ),
-                      ),
-                      DataCell(
-                        Text(
-                          _formatNumber(record["area_in_hectare__2012_13"]),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
+                    DataCell(Text(record["country"]?.toString() ?? "-")),
+                    DataCell(
+                      Text(_formatNumber(record["area_in_hectare__2009_10"])),
+                    ),
+                    DataCell(
+                      Text(_formatNumber(record["area_in_hectare__2010_11"])),
+                    ),
+                    DataCell(
+                      Text(_formatNumber(record["area_in_hectare__2012_13"])),
+                    ),
+                  ],
+                );
+              }),
             ),
           ),
         ],
@@ -620,11 +581,7 @@ class _FruitsAndVegetablesScreenState extends State<FruitsAndVegetablesScreen>
       ),
       child: Column(
         children: [
-          Icon(
-            Icons.table_chart,
-            size: 60,
-            color: Color(0xFFCBD5E0),
-          ),
+          Icon(Icons.table_chart, size: 60, color: Color(0xFFCBD5E0)),
           SizedBox(height: 16),
           Text(
             "No Data Available",
@@ -637,10 +594,7 @@ class _FruitsAndVegetablesScreenState extends State<FruitsAndVegetablesScreen>
           SizedBox(height: 8),
           Text(
             "The dataset doesn't contain any records to display",
-            style: TextStyle(
-              fontSize: 14,
-              color: Color(0xFF718096),
-            ),
+            style: TextStyle(fontSize: 14, color: Color(0xFF718096)),
             textAlign: TextAlign.center,
           ),
         ],
@@ -681,15 +635,32 @@ class _FruitsAndVegetablesScreenState extends State<FruitsAndVegetablesScreen>
       if (response.data != null) {
         print("Response => ${response.data}");
         responseMap = response.data;
-        _animationController.forward();
+
+        myDatabase.insertData(
+          responseMap["index_name"],
+          responseMap["title"],
+          responseMap["org_type"],
+          jsonEncode(responseMap["sector"]),
+            jsonEncode(responseMap["field"]),
+            jsonEncode(responseMap["records"]),
+        );
       } else {
         throw Exception("No data received from server");
       }
     } catch (e) {
       print("Error fetching data: $e");
-      setState(() {
-        errorMessage = "Failed to load data. Please check your internet connection.";
-      });
+
+      responseMap = await myDatabase.readData();
+      print("Error fetching data: $responseMap");
+      print("Error fetching data: ${responseMap["title"]}");
+      print("Error fetching data: ${responseMap["sector"]}");
+      if (responseMap.isNotEmpty) {
+        errorMessage=null;
+      } else {
+        errorMessage =
+            "Failed to load data. Please check your internet connection.";
+      }
+      setState(() {});
     } finally {
       setState(() {
         isLoading = false;

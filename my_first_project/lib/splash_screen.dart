@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'MyDatabase.dart';
 import 'dashbord.dart';
 import 'login_page.dart';
 
@@ -17,6 +18,8 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     checkIfLoggedIn();
+
+    MyDatabase().initialize();
   }
 
   @override
