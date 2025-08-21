@@ -32,38 +32,29 @@ sector text,field text,records text) """,
     });
   }
 
-  Future<Map<String,dynamic>> readData() async {
+  Future<Map<String, dynamic>> readData() async {
     List<Map<String, dynamic>> rows = await database!.rawQuery(
       "SELECT * FROM agriculture",
     );
 
     Map<String, dynamic> responseMap = Map.from(rows[0]);
-    String sector= rows[0]['sector'];
-    String field= rows[0]['field'];
-    String records= rows[0]['records'];
-
-
+    String sector = rows[0]['sector'];
+    String field = rows[0]['field'];
+    String records = rows[0]['records'];
 
     responseMap["sector"] = jsonDecode(sector);
     responseMap["field"] = jsonDecode(field);
     responseMap["records"] = jsonDecode(records);
 
-    print("field ${ responseMap["field"] .runtimeType}");
+    print("field ${responseMap["field"].runtimeType}");
 
-  // for (var i = 0; i < responseMap["field"].length; i++) {
-  //   print("field ${ responseMap["field"][i].runtimeType}");
-  //   responseMap["field"][i] = jsonDecode(responseMap["field"][i]);
-  // }
-  // for (var i = 0; i < responseMap["records"].length; i++) {
-  //   responseMap["records"][i] = jsonDecode(responseMap["records"][i]);
-  // }
 
     print("field JSON  ${responseMap["field"][0]}  ");
-
 
     return responseMap;
   }
 
-  // CRUD
-  // Create, READ, UPDATE, DELETE
+  void delete() {
+    database!.execute("DELETE FROM agriculture");
+  }
 }

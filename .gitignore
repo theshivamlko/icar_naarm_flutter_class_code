@@ -1,0 +1,2 @@
+cloud_run_functions/node_modules
+# Ignore node_modules in cloud_run_functions directory
