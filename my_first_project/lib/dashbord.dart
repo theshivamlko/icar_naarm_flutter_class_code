@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_first_project/profile_page.dart';
 import 'package:my_first_project/splash_screen.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -122,6 +123,26 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                               ),
                             ),
                           ],
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: IconButton(
+                            onPressed: () async {
+
+                              Navigator.push(context, MaterialPageRoute(
+                                builder: (context) => ProfilePage(),
+                              ));
+
+                            },
+                            icon: Icon(
+                              Icons.account_circle_rounded,
+                              color: Colors.white,
+                              size: 24,
+                            ),
+                          ),
                         ),
                         Container(
                           decoration: BoxDecoration(
